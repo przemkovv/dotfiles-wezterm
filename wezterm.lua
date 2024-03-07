@@ -2,9 +2,22 @@ local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
 
-config.color_scheme = 'Tango (terminal.sexy)'
+config.color_scheme = 'Tomorrow Night Bright (Gogh)'
 config.font = wezterm.font('JetBrainsMono Nerd Font', { weight = 'Regular' })
+config.font_rules = {
+    {
+    italic = true,
+    intensity = 'Half',
+    font = wezterm.font {
+      family = 'JetBrainsMono Nerd Font',
+      weight = 'Thin',
+      style = 'Italic',
+    },
+  },
+
+}
 config.font_size = 13
+config.bold_brightens_ansi_colors = "BrightAndBold"
 config.line_height = 1.0
 config.initial_cols = 160
 config.initial_rows = 60
