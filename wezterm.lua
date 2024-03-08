@@ -3,7 +3,8 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 -- config.color_scheme = 'Tomorrow Night Bright (Gogh)'
-config.color_scheme = 'Tango (terminal.sexy)'
+config.color_scheme = 'iTerm2 Tango Dark'
+-- config.color_scheme = 'Tango (terminal.sexy)'
 config.font = wezterm.font_with_fallback(
   { family = 'JetBrainsMono Nerd Font', weight = 'Medium' }
 )
