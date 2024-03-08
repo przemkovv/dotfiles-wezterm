@@ -2,31 +2,41 @@ local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
 
-config.color_scheme = 'Tomorrow Night Bright (Gogh)'
-config.font = wezterm.font('JetBrainsMono Nerd Font', { weight = 'Regular' })
+-- config.color_scheme = 'Tomorrow Night Bright (Gogh)'
+config.color_scheme = 'Tango (terminal.sexy)'
+config.font = wezterm.font_with_fallback(
+  { family = 'JetBrainsMono Nerd Font', weight = 'Medium' }
+)
 config.font_rules = {
-    {
+  {
     italic = true,
     intensity = 'Half',
     font = wezterm.font {
       family = 'JetBrainsMono Nerd Font',
-      weight = 'Thin',
+      weight = 'ExtraLight',
       style = 'Italic',
     },
   },
 
 }
-config.font_size = 13
 config.bold_brightens_ansi_colors = "BrightAndBold"
 config.line_height = 1.0
-config.initial_cols = 160
-config.initial_rows = 60
 config.use_fancy_tab_bar = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
 config.max_fps = 60
-config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
+if wezterm.hostname() == 'MA-605' then
+  config.window_decorations = "RESIZE|TITLE"
+config.initial_cols = 160
+config.initial_rows = 40
+config.font_size = 10
+else
+  config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
+config.initial_cols = 160
+config.initial_rows = 60
+config.font_size = 13
+end
 config.term = 'wezterm'
 config.front_end = 'WebGpu'
 config.enable_scroll_bar = true
@@ -53,8 +63,17 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
     '-NoExit', '-Command',
     '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
   }
-  config.default_prog = pwsh_with_vs
   config.default_cwd = 'h:/projects/'
+  if wezterm.hostname() == 'MA-605' then
+    pwsh_with_vs = {
+      'pwsh.exe',
+      '-NoExit', '-Command',
+      '&{Import-Module "c:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 7cdab58d -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    }
+    config.default_cwd = 'd:/projects/'
+  end
+
+  config.default_prog = pwsh_with_vs
   table.insert(launch_menu, {
     label = 'pwsh',
     args = { 'pwsh.exe', '-NoLogo' },
@@ -62,7 +81,7 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   table.insert(launch_menu, {
     label = 'pwsh with VS',
     args = pwsh_with_vs,
-    cwd = 'h:/projects/',
+    cwd = config.default_cwd,
     domain = 'DefaultDomain'
   })
 end
@@ -84,7 +103,7 @@ config.keys = {
   { key = "d",      mods = 'LEADER',       action = act.SpawnTab("DefaultDomain") },
   { key = "t",      mods = 'LEADER|SHIFT', action = act.SpawnWindow },
   { key = "q",      mods = 'LEADER',       action = act.CloseCurrentTab({ confirm = false }) },
-  { key = 'F12',      mods = 'NONE',       action = act.ShowDebugOverlay, },
+  { key = 'F12',    mods = 'NONE',         action = act.ShowDebugOverlay, },
   { key = "s",      mods = "LEADER",       action = act.SplitVertical({ domain = "CurrentPaneDomain" }), },
   { key = "v",      mods = "LEADER",       action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
   { key = "|",      mods = "LEADER|SHIFT", action = act.TogglePaneZoomState },
@@ -95,9 +114,24 @@ config.keys = {
   { key = "l",      mods = "LEADER|CTRL",  action = act.ActivatePaneDirection("Right") },
   { key = "Tab",    mods = "CTRL|SHIFT",   action = act.ActivateTabRelative(-1) },
   { key = "Tab",    mods = "CTRL",         action = act.ActivateTabRelative(1) },
-  { key = "p",      mods = "LEADER",       action = act.PaneSelect({ alphabet = "1234567890", mode = "SwapWithActiveKeepFocus" }), },
-  { key = "f",      mods = "LEADER",       action = act.ActivateKeyTable({ name = "resize_font", one_shot = false, timemout_miliseconds = 1000, }), },
-  { key = 'b',      mods = 'LEADER|CTRL',  action = act.SendKey { key = 'b', mods = 'CTRL' }, },
+  {
+    key = "p",
+    mods = "LEADER",
+    action = act.PaneSelect({
+      alphabet = "1234567890",
+      mode = "SwapWithActiveKeepFocus"
+    }),
+  },
+  {
+    key = "f",
+    mods = "LEADER",
+    action = act.ActivateKeyTable({
+      name = "resize_font",
+      one_shot = false,
+      timemout_miliseconds = 1000,
+    }),
+  },
+  { key = 'b', mods = 'LEADER|CTRL', action = act.SendKey { key = 'b', mods = 'CTRL' }, },
 }
 
 local key_tables = {
