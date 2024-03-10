@@ -29,14 +29,20 @@ config.adjust_window_size_when_changing_font_size = false
 config.max_fps = 60
 if wezterm.hostname() == 'MA-605' then
   config.window_decorations = "RESIZE|TITLE"
-config.initial_cols = 160
-config.initial_rows = 40
-config.font_size = 10
+  config.initial_cols = 160
+  config.initial_rows = 40
+  config.font_size = 10
+elseif wezterm.hostname() == 'legolas' then
+  config.window_decorations = "TITLE"
+  config.initial_cols = 160
+  config.initial_rows = 40
+  config.font_size = 14
+  config.hide_tab_bar_if_only_one_tab = true
 else
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
-config.initial_cols = 160
-config.initial_rows = 60
-config.font_size = 13
+  config.initial_cols = 160
+  config.initial_rows = 60
+  config.font_size = 13
 end
 config.term = 'wezterm'
 config.front_end = 'WebGpu'
