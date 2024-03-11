@@ -5,21 +5,20 @@ local config = wezterm.config_builder()
 -- config.color_scheme = 'Tomorrow Night Bright (Gogh)'
 config.color_scheme = 'iTerm2 Tango Dark'
 -- config.color_scheme = 'Tango (terminal.sexy)'
-config.font = wezterm.font_with_fallback(
-  { family = 'JetBrainsMono Nerd Font', weight = 'Medium' }
-)
-config.font_rules = {
-  {
-    italic = true,
-    intensity = 'Half',
-    font = wezterm.font {
-      family = 'JetBrainsMono Nerd Font',
-      weight = 'ExtraLight',
-      style = 'Italic',
-    },
-  },
-
-}
+-- config.font = wezterm.font_with_fallback(
+--   { family = 'JetBrainsMono Nerd Font', weight = 'Medium' }
+-- )
+-- config.font_rules = {
+--   {
+--     italic = true,
+--     intensity = 'Half',
+--     font = wezterm.font {
+--       family = 'JetBrainsMono Nerd Font',
+--       weight = 'ExtraLight',
+--       style = 'Italic',
+--     },
+--   },
+-- }
 config.bold_brightens_ansi_colors = "BrightAndBold"
 config.line_height = 1.0
 config.use_fancy_tab_bar = true
@@ -40,6 +39,7 @@ elseif wezterm.hostname() == 'legolas' then
   config.initial_rows = 40
   config.font_size = 14
   config.hide_tab_bar_if_only_one_tab = true
+  config.term = 'wezterm'
 else
   config.enable_scroll_bar = true
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
@@ -47,7 +47,6 @@ else
   config.initial_rows = 60
   config.font_size = 13
 end
-config.term = 'wezterm'
 config.front_end = 'WebGpu'
 config.enable_scroll_bar = true
 config.scrollback_lines = 10000
@@ -56,7 +55,7 @@ config.disable_default_key_bindings = true
 config.unicode_version = 14
 config.debug_key_events = false
 config.win32_system_backdrop = 'Disable'
-config.allow_win32_input_mode = true
+config.allow_win32_input_mode = false
 config.window_background_opacity = 1.0
 config.window_padding = {
   left = 0,
