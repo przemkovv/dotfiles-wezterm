@@ -28,17 +28,20 @@ config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
 config.max_fps = 60
 if wezterm.hostname() == 'MA-605' then
+  config.enable_scroll_bar = true
   config.window_decorations = "RESIZE|TITLE"
   config.initial_cols = 160
   config.initial_rows = 40
   config.font_size = 10
 elseif wezterm.hostname() == 'legolas' then
+  config.enable_scroll_bar = false
   config.window_decorations = "TITLE"
   config.initial_cols = 160
   config.initial_rows = 40
   config.font_size = 14
   config.hide_tab_bar_if_only_one_tab = true
 else
+  config.enable_scroll_bar = true
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
   config.initial_cols = 160
   config.initial_rows = 60
@@ -96,7 +99,7 @@ end
 config.launch_menu = launch_menu
 
 local act = wezterm.action
-config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1000 }
+config.leader = { key = 'b', mods = 'ALT', timeout_milliseconds = 1000 }
 config.keys = {
   { key = "1",      mods = "LEADER",       action = "ActivateCopyMode" },
   { key = "p",      mods = "LEADER|SHIFT", action = act.ActivateCommandPalette },
@@ -110,7 +113,7 @@ config.keys = {
   { key = "d",      mods = 'LEADER',       action = act.SpawnTab("DefaultDomain") },
   { key = "t",      mods = 'LEADER|SHIFT', action = act.SpawnWindow },
   { key = "q",      mods = 'LEADER',       action = act.CloseCurrentTab({ confirm = false }) },
-  { key = 'F12',    mods = 'NONE',         action = act.ShowDebugOverlay, },
+  { key = 'F12',    mods = 'ALT',          action = act.ShowDebugOverlay, },
   { key = "s",      mods = "LEADER",       action = act.SplitVertical({ domain = "CurrentPaneDomain" }), },
   { key = "v",      mods = "LEADER",       action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
   { key = "|",      mods = "LEADER|SHIFT", action = act.TogglePaneZoomState },
