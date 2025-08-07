@@ -31,7 +31,15 @@ else
   config.initial_rows = 60
   config.font_size = 11
 end
-config.front_end = 'WebGpu'
+
+for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
+  if gpu.backend == 'Vulkan' and gpu.device_type == 'DiscreteGpu' then
+    config.webgpu_preferred_adapter = gpu
+    config.front_end = 'WebGpu'
+    break
+  end
+end
+
 config.enable_scroll_bar = true
 config.scrollback_lines = 10000
 config.use_dead_keys = false
