@@ -2,30 +2,14 @@ local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
 
--- config.color_scheme = 'Tomorrow Night Bright (Gogh)'
-config.color_scheme = 'iTerm2 Tango Dark'
--- config.color_scheme = 'Tango (terminal.sexy)'
--- config.font = wezterm.font_with_fallback(
---   { family = 'JetBrainsMono Nerd Font', weight = 'Medium' }
--- )
--- config.font_rules = {
---   {
---     italic = true,
---     intensity = 'Half',
---     font = wezterm.font {
---       family = 'JetBrainsMono Nerd Font',
---       weight = 'ExtraLight',
---       style = 'Italic',
---     },
---   },
--- }
+config.color_scheme = 'Tango (terminal.sexy)'
 config.bold_brightens_ansi_colors = "BrightAndBold"
 config.line_height = 1.0
 config.use_fancy_tab_bar = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
-config.max_fps = 60
+-- config.max_fps = 120
 if wezterm.hostname() == 'MA-605' then
   config.enable_scroll_bar = true
   config.window_decorations = "RESIZE|TITLE"
@@ -45,7 +29,7 @@ else
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
   config.initial_cols = 160
   config.initial_rows = 60
-  config.font_size = 13
+  config.font_size = 11
 end
 config.front_end = 'WebGpu'
 config.enable_scroll_bar = true
@@ -54,19 +38,26 @@ config.use_dead_keys = false
 config.disable_default_key_bindings = true
 config.unicode_version = 14
 config.debug_key_events = false
-config.win32_system_backdrop = 'Disable'
+config.win32_system_backdrop = 'Tabbed'
 config.allow_win32_input_mode = false
-config.window_background_opacity = 1.0
+config.window_background_opacity = 0.0
+config.text_background_opacity = 1.0
 config.window_padding = {
   left = 0,
   right = 10,
   top = 0,
   bottom = 0,
 }
+config.enable_kitty_graphics = true
 
 local launch_menu = {}
 
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
+  local pwsh_with_vs2 = {
+    'cmd.exe',
+    '/c',
+    'vs_init.bat'
+  }
   local pwsh_with_vs = {
     'pwsh.exe',
     '-NoExit', '-Command',
@@ -82,7 +73,7 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
     config.default_cwd = 'd:/projects/'
   end
 
-  config.default_prog = pwsh_with_vs
+  config.default_prog = pwsh_with_vs2
   table.insert(launch_menu, {
     label = 'pwsh',
     args = { 'pwsh.exe', '-NoLogo' },
@@ -90,6 +81,11 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   table.insert(launch_menu, {
     label = 'pwsh with VS',
     args = pwsh_with_vs,
+    cwd = config.default_cwd,
+  })
+  table.insert(launch_menu, {
+    label = 'pwsh with VS simple',
+    args = pwsh_with_vs2,
     cwd = config.default_cwd,
     domain = 'DefaultDomain'
   })
