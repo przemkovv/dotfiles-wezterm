@@ -41,14 +41,14 @@ for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
 end
 
 config.enable_scroll_bar = true
-config.scrollback_lines = 10000
+config.scrollback_lines = 50000
 config.use_dead_keys = false
 config.disable_default_key_bindings = true
 config.unicode_version = 14
 config.debug_key_events = false
 config.win32_system_backdrop = 'Tabbed'
 config.allow_win32_input_mode = false
-config.window_background_opacity = 0.0
+config.window_background_opacity = 0.8
 config.text_background_opacity = 1.0
 config.window_padding = {
   left = 0,
@@ -69,7 +69,8 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   local pwsh_with_vs = {
     'pwsh.exe',
     '-NoExit', '-Command',
-    '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    -- '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    '&{Import-Module "C:/Program Files/Microsoft Visual Studio/18/Insiders/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell f2e467b8 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
   }
   config.default_cwd = 'h:/projects/'
   if wezterm.hostname() == 'MA-605' then
@@ -99,6 +100,7 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   })
 end
 
+config.ssh_backend = "Ssh2"
 config.launch_menu = launch_menu
 
 local act = wezterm.action
@@ -107,10 +109,11 @@ config.keys = {
   { key = 'F12',    mods = 'ALT',        action = act.ShowDebugOverlay, },
   { key = "p",      mods = "ALT",        action = act.ActivateCommandPalette },
   { key = "t",      mods = "ALT|CTRL",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
-  { key = "w",      mods = "ALT",        action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }), },
+  { key = "w",      mods = "ALT",        action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES|DOMAINS" }), },
   { key = 'l',      mods = 'ALT',        action = act.ShowLauncherArgs { flags = 'LAUNCH_MENU_ITEMS' }, },
   { key = "f",      mods = "ALT",        action = act.Search({ CaseInSensitiveString = "" }) },
-  { key = "d",      mods = 'ALT',        action = act.SpawnTab("DefaultDomain") },
+  { key = "d",      mods = 'ALT|SHIFT',  action = act.SpawnTab("DefaultDomain") },
+  { key = "d",      mods = 'ALT',        action = act.SpawnTab("CurrentPaneDomain") },
   { key = "t",      mods = 'ALT|SHIFT',  action = act.SpawnWindow },
   { key = "c",      mods = "ALT",        action = act.CloseCurrentPane({ confirm = false }) },
   { key = "q",      mods = 'ALT',        action = act.CloseCurrentTab({ confirm = false }) },
@@ -120,6 +123,8 @@ config.keys = {
   { key = "k",      mods = "ALT",        action = act.ActivatePaneDirection("Up") },
   { key = "j",      mods = "ALT",        action = act.ActivatePaneDirection("Down") },
   { key = "h",      mods = "ALT",        action = act.ActivatePaneDirection("Left") },
+  { key = "h",      mods = "ALT|SHIFT",  action = act.ActivateTabRelative(-1) },
+  { key = "l",      mods = "ALT|SHIFT",  action = act.ActivateTabRelative(1) },
   { key = "l",      mods = "ALT",        action = act.ActivatePaneDirection("Right") },
   { key = "Tab",    mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
   { key = "Tab",    mods = "CTRL",       action = act.ActivateTabRelative(1) },
@@ -127,6 +132,7 @@ config.keys = {
   { key = "c",      mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
   { key = "v",      mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
   { key = "Insert", mods = "SHIFT",      action = act.PasteFrom("Clipboard") },
+  { key = 'F9',     mods = 'ALT',        action = wezterm.action.ShowTabNavigator },
   {
     key = "p",
     mods = "LEADER",
