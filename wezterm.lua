@@ -90,6 +90,7 @@ config.font_rules = {
 }
 
 config.color_scheme = 'Tango (terminal.sexy)'
+-- config.color_scheme = 'Tokyo Night Moon'
 config.bold_brightens_ansi_colors = "BrightAndBold"
 config.line_height = font.line_height
 config.use_fancy_tab_bar = true
@@ -270,6 +271,7 @@ local key_tables = {
 
 config.disable_default_mouse_bindings = false
 local mouse_bindings = {
+  { event = { Up = { streak = 1, button = "Left" } },              mods = "NONE", action = act.CompleteSelection("ClipboardAndPrimarySelection"), },
   { event = { Up = { streak = 1, button = "Left" } },              mods = "CTRL", action = act.OpenLinkAtMouseCursor, },
   { event = { Down = { streak = 3, button = 'Left' } },            mods = 'NONE', action = act.SelectTextAtMouseCursor 'SemanticZone', },
   { event = { Down = { streak = 1, button = { WheelUp = 1 } } },   mods = 'CTRL', action = act.IncreaseFontSize, },
