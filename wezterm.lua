@@ -1,4 +1,5 @@
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
+local fonts = require('fonts')
 
 -- Font installation on Windows:
 -- Install-PSResource -Name NerdFonts
@@ -7,98 +8,18 @@ local wezterm = require 'wezterm'
 -- Install-NerdFont -Name 'JetBrainsMono'
 
 local config = wezterm.config_builder()
-local fonts = {
-  {
-    family_name = 'FiraCode Nerd Font',
-    faces = { Thin = 'Light', Normal = 450, Bold = 'DemiBold' },
-    line_height = 1.0,
-    size = {
-      ['MA-605'] = 12,
-      legolas = 14,
-      default = 10
-    }
-  },
-  {
-    family_name = 'JetBrainsMono Nerd Font',
-    faces = { Thin = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
-    line_height = 1.0,
-    size = {
-      ['MA-605'] = 12,
-      legolas = 14,
-      default = 10
-    }
-  }
-}
-local font = fonts[2]
-config.font = wezterm.font(font.family_name, { weight = font.faces.Normal, italic = false })
-config.font_rules = {
-  -- Match bold text and use a specific bold font
-  {
-    intensity = 'Half',
-    italic = true,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Half,
-      style = 'Italic',
-    }),
-  },
-  {
-    intensity = 'Half',
-    italic = false,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Half,
-      style = 'Normal',
-    }),
-  },
-  {
-    intensity = 'Normal',
-    italic = true,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Normal,
-      style = 'Italic',
-    }),
-  },
-  {
-    intensity = 'Normal',
-    italic = false,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Normal,
-      style = 'Normal',
-    }),
-  },
-  {
-    intensity = 'Bold',
-    italic = true,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Bold,
-      style = 'Italic',
-    }),
-  },
-  {
-    intensity = 'Bold',
-    italic = false,
-    font = wezterm.font({
-      family = font.family_name,
-      weight = font.faces.Bold,
-      style = 'Normal',
-    }),
-  },
-}
+
+fonts.setup_font(config, 2)
 
 config.color_scheme = 'Tango (terminal.sexy)'
 -- config.color_scheme = 'Tokyo Night Moon'
 config.bold_brightens_ansi_colors = "BrightAndBold"
-config.line_height = font.line_height
 config.use_fancy_tab_bar = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
--- config.max_fps = 120
-config.font_size = font.size[wezterm.hostname()] or font.size['default']
+config.max_fps = 120
+
 if wezterm.hostname() == 'MA-605' then
   config.enable_scroll_bar = true
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
