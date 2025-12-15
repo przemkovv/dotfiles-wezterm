@@ -81,7 +81,7 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
     config.default_cwd = 'd:/projects/'
   end
 
-  config.default_prog = pwsh_with_vs2
+  config.default_prog = pwsh_with_vs
   table.insert(launch_menu, {
     label = 'pwsh',
     args = { 'pwsh.exe', '-NoLogo' },
