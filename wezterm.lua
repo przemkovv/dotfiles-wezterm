@@ -1,27 +1,35 @@
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
+local fonts = require('fonts')
+
+-- Font installation on Windows:
+-- Install-PSResource -Name NerdFonts
+-- Import-Module -Name NerdFonts
+-- Install-NerdFont -Name 'FiraCode'
+-- Install-NerdFont -Name 'JetBrainsMono'
 
 local config = wezterm.config_builder()
 
+fonts.setup_font(config, 2)
+
 config.color_scheme = 'Tango (terminal.sexy)'
+-- config.color_scheme = 'Tokyo Night Moon'
 config.bold_brightens_ansi_colors = "BrightAndBold"
-config.line_height = 1.0
 config.use_fancy_tab_bar = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
--- config.max_fps = 120
+config.max_fps = 120
+
 if wezterm.hostname() == 'MA-605' then
   config.enable_scroll_bar = true
-  config.window_decorations = "RESIZE|TITLE"
+  config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
   config.initial_cols = 160
   config.initial_rows = 40
-  config.font_size = 10
 elseif wezterm.hostname() == 'legolas' then
   config.enable_scroll_bar = false
   config.window_decorations = "TITLE"
   config.initial_cols = 160
   config.initial_rows = 40
-  config.font_size = 14
   config.hide_tab_bar_if_only_one_tab = true
   config.term = 'wezterm'
 else
@@ -29,7 +37,6 @@ else
   config.window_decorations = "RESIZE|INTEGRATED_BUTTONS"
   config.initial_cols = 160
   config.initial_rows = 60
-  config.font_size = 11
 end
 
 for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
@@ -41,14 +48,14 @@ for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
 end
 
 config.enable_scroll_bar = true
-config.scrollback_lines = 10000
+config.scrollback_lines = 50000
 config.use_dead_keys = false
 config.disable_default_key_bindings = true
 config.unicode_version = 14
 config.debug_key_events = false
 config.win32_system_backdrop = 'Tabbed'
 config.allow_win32_input_mode = false
-config.window_background_opacity = 0.0
+config.window_background_opacity = 0.8
 config.text_background_opacity = 1.0
 config.window_padding = {
   left = 0,
@@ -69,7 +76,8 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   local pwsh_with_vs = {
     'pwsh.exe',
     '-NoExit', '-Command',
-    '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    -- '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    '&{Import-Module "C:/Program Files/Microsoft Visual Studio/18/Insiders/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell f2e467b8 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
   }
   config.default_cwd = 'h:/projects/'
   if wezterm.hostname() == 'MA-605' then
@@ -99,34 +107,42 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   })
 end
 
+config.ssh_backend = "Ssh2"
 config.launch_menu = launch_menu
 
 local act = wezterm.action
 config.leader = { key = 'b', mods = 'ALT', timeout_milliseconds = 1000 }
 config.keys = {
-  { key = 'F12',    mods = 'ALT',        action = act.ShowDebugOverlay, },
-  { key = "p",      mods = "ALT",        action = act.ActivateCommandPalette },
-  { key = "t",      mods = "ALT|CTRL",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
-  { key = "w",      mods = "ALT",        action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }), },
-  { key = 'l',      mods = 'ALT',        action = act.ShowLauncherArgs { flags = 'LAUNCH_MENU_ITEMS' }, },
-  { key = "f",      mods = "ALT",        action = act.Search({ CaseInSensitiveString = "" }) },
-  { key = "d",      mods = 'ALT',        action = act.SpawnTab("DefaultDomain") },
-  { key = "t",      mods = 'ALT|SHIFT',  action = act.SpawnWindow },
-  { key = "c",      mods = "ALT",        action = act.CloseCurrentPane({ confirm = false }) },
-  { key = "q",      mods = 'ALT',        action = act.CloseCurrentTab({ confirm = false }) },
-  { key = "s",      mods = "ALT",        action = act.SplitVertical({ domain = "CurrentPaneDomain" }), },
-  { key = "v",      mods = "ALT",        action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
-  { key = "|",      mods = "ALT|SHIFT",  action = act.TogglePaneZoomState },
-  { key = "k",      mods = "ALT",        action = act.ActivatePaneDirection("Up") },
-  { key = "j",      mods = "ALT",        action = act.ActivatePaneDirection("Down") },
-  { key = "h",      mods = "ALT",        action = act.ActivatePaneDirection("Left") },
-  { key = "l",      mods = "ALT",        action = act.ActivatePaneDirection("Right") },
-  { key = "Tab",    mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
-  { key = "Tab",    mods = "CTRL",       action = act.ActivateTabRelative(1) },
-  { key = "1",      mods = "ALT",        action = "ActivateCopyMode" },
-  { key = "c",      mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
-  { key = "v",      mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
-  { key = "Insert", mods = "SHIFT",      action = act.PasteFrom("Clipboard") },
+  { key = 'F12',      mods = 'ALT',        action = act.ShowDebugOverlay, },
+  { key = "p",        mods = "ALT",        action = act.ActivateCommandPalette },
+  { key = "t",        mods = "ALT|CTRL",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
+  { key = "w",        mods = "ALT",        action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES|DOMAINS" }), },
+  { key = 'l',        mods = 'ALT',        action = act.ShowLauncherArgs { flags = 'LAUNCH_MENU_ITEMS' }, },
+  { key = "d",        mods = 'ALT|SHIFT',  action = act.SpawnTab("DefaultDomain") },
+  { key = "d",        mods = 'ALT',        action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "t",        mods = 'ALT|SHIFT',  action = act.SpawnWindow },
+  { key = "c",        mods = "ALT",        action = act.CloseCurrentPane({ confirm = false }) },
+  { key = "q",        mods = 'ALT',        action = act.CloseCurrentTab({ confirm = false }) },
+  { key = "s",        mods = "ALT",        action = act.SplitVertical({ domain = "CurrentPaneDomain" }), },
+  { key = "v",        mods = "ALT",        action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
+  { key = "|",        mods = "ALT|SHIFT",  action = act.TogglePaneZoomState },
+  { key = "k",        mods = "ALT",        action = act.ActivatePaneDirection("Up") },
+  { key = "j",        mods = "ALT",        action = act.ActivatePaneDirection("Down") },
+  { key = "h",        mods = "ALT",        action = act.ActivatePaneDirection("Left") },
+  { key = "h",        mods = "ALT|SHIFT",  action = act.ActivateTabRelative(-1) },
+  { key = "l",        mods = "ALT|SHIFT",  action = act.ActivateTabRelative(1) },
+  { key = "l",        mods = "ALT",        action = act.ActivatePaneDirection("Right") },
+  { key = "Tab",      mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "Tab",      mods = "CTRL",       action = act.ActivateTabRelative(1) },
+  { key = "f",        mods = "ALT",        action = act.Search({ CaseInSensitiveString = "" }) },
+  { key = "x",        mods = "ALT",        action = act.ActivateCopyMode },
+  { key = " ",        mods = "CTRL|SHIFT", action = act.QuickSelect },
+  { key = "c",        mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
+  { key = "v",        mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
+  { key = "Insert",   mods = "SHIFT",      action = act.PasteFrom("Clipboard") },
+  { key = 'F9',       mods = 'ALT',        action = wezterm.action.ShowTabNavigator },
+  { key = 'PageUp',   mods = 'SHIFT',      action = act.ScrollByPage(-1) },
+  { key = 'PageDown', mods = 'SHIFT',      action = act.ScrollByPage(1) },
   {
     key = "p",
     mods = "LEADER",
@@ -147,6 +163,14 @@ config.keys = {
   { key = 'b', mods = 'LEADER|CTRL', action = act.SendKey { key = 'b', mods = 'CTRL' }, },
 }
 
+local copy_mode = wezterm.gui.default_key_tables().copy_mode
+if wezterm.gui then
+  table.insert(copy_mode, { key = 'k', mods = 'CTRL', action = act.CopyMode 'MoveBackwardSemanticZone' })
+  table.insert(copy_mode, { key = 'j', mods = 'CTRL', action = act.CopyMode 'MoveForwardSemanticZone' })
+  table.insert(copy_mode, { key = 'z', mods = 'CTRL', action = act.CopyMode { SetSelectionMode = 'SemanticZone' }, })
+  table.insert(copy_mode, { key = 'k', mods = 'ALT', action = act.CopyMode { MoveBackwardZoneOfType = 'Output' } })
+  table.insert(copy_mode, { key = 'j', mods = 'ALT', action = act.CopyMode { MoveForwardZoneOfType = 'Output' } })
+end
 local key_tables = {
   resize_font = {
     { key = "k",      action = act.IncreaseFontSize },
@@ -163,15 +187,18 @@ local key_tables = {
     { key = "Escape", action = "PopKeyTable" },
     { key = "q",      action = "PopKeyTable" },
   },
+  copy_mode = copy_mode,
 }
+
+config.disable_default_mouse_bindings = false
 local mouse_bindings = {
-  -- Ctrl-click will open the link under the mouse cursor
-  {
-    event = { Up = { streak = 1, button = "Left" } },
-    mods = "CTRL",
-    action = act.OpenLinkAtMouseCursor,
-  },
+  { event = { Up = { streak = 1, button = "Left" } },              mods = "NONE", action = act.CompleteSelection("ClipboardAndPrimarySelection"), },
+  { event = { Up = { streak = 1, button = "Left" } },              mods = "CTRL", action = act.OpenLinkAtMouseCursor, },
+  { event = { Down = { streak = 3, button = 'Left' } },            mods = 'NONE', action = act.SelectTextAtMouseCursor 'SemanticZone', },
+  { event = { Down = { streak = 1, button = { WheelUp = 1 } } },   mods = 'CTRL', action = act.IncreaseFontSize, },
+  { event = { Down = { streak = 1, button = { WheelDown = 1 } } }, mods = 'CTRL', action = act.DecreaseFontSize, },
 }
+
 config.key_tables = key_tables
 config.mouse_bindings = mouse_bindings
 
