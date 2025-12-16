@@ -7,9 +7,9 @@ M.fonts = {
   {
     family_name = 'FiraCode Nerd Font',
     faces = { Thin = 'Light', Normal = 450, Bold = 'DemiBold' },
-    line_height = 1.1,
+    line_height = 1.0,
     size = {
-      ['MA-605'] = 12,
+      ['MA-605'] = 11,
       legolas = 14,
       default = 10
     }
@@ -17,9 +17,9 @@ M.fonts = {
   {
     family_name = 'JetBrainsMono Nerd Font',
     faces = { Thin = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
-    line_height = 1.1,
+    line_height = 1.0,
     size = {
-      ['MA-605'] = 12,
+      ['MA-605'] = 11,
       legolas = 14,
       default = 10
     }
