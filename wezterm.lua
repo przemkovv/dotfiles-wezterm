@@ -1,3 +1,4 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 local fonts = require('fonts')
 
@@ -9,7 +10,7 @@ local fonts = require('fonts')
 
 local config = wezterm.config_builder()
 
-fonts.setup_font(config, 2)
+fonts.setup_font(config, 1)
 
 config.color_scheme = 'Tango (terminal.sexy)'
 -- config.color_scheme = 'Tokyo Night Moon'

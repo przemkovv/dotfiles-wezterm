@@ -1,7 +1,8 @@
-local wezterm = require('wezterm')
 local M = {}
 
-M.selected_font_index = 1
+local wezterm = require('wezterm') ---@as Wezterm
+
+local default_font_index = 1
 M.fonts = {
   {
     family_name = 'FiraCode Nerd Font',
@@ -25,7 +26,7 @@ M.fonts = {
   }
 }
 
-function M.get_font(font)
+local function get_font(font)
   return wezterm.font(
     font.family_name,
     {
@@ -35,7 +36,8 @@ function M.get_font(font)
   )
 end
 
-function M.get_font_rules(font)
+local function get_font_rules(font)
+  ---@type FontRules
   local font_rules = {
     -- Match bold text and use a specific bold font
     {
@@ -96,11 +98,12 @@ function M.get_font_rules(font)
   return font_rules
 end
 
+---@param config Config
+---@param font_index number?
 function M.setup_font(config, font_index)
-  M.selected_font_index = font_index or M.selected_font_index
-  local selected_font = M.fonts[M.selected_font_index]
-  config.font = M.get_font(selected_font)
-  config.font_rules = M.get_font_rules(selected_font)
+  local selected_font = M.fonts[font_index or default_font_index]
+  config.font = get_font(selected_font)
+  config.font_rules = get_font_rules(selected_font)
   config.line_height = selected_font.line_height
   config.font_size = selected_font.size[wezterm.hostname()] or selected_font.size['default']
 end
