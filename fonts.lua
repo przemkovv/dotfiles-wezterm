@@ -3,96 +3,100 @@ local M = {}
 local wezterm = require('wezterm') ---@as Wezterm
 
 local default_font_index = 1
+
+local fallback_fonts = {
+  -- Symbol coverage
+  { family = "Symbols Nerd Font Mono" },
+  { family = "Noto Sans Symbols 2" },
+  { family = "Segoe UI Symbol" },
+  { family = "Symbola" },
+
+  -- Math coverage
+  { family = "STIX Two Math" },
+  { family = "Cambria Math" },
+  { family = "Noto Sans Math" },
+
+  -- Miscellaneous wide coverage
+  { family = "Noto Color Emoji" },
+  { family = "Noto Sans CJK SC" },
+  { family = "Noto Sans CJK JP" },
+}
+
 M.fonts = {
   {
-    family_name = 'FiraCode Nerd Font',
-    faces = { Thin = 'Light', Normal = 450, Bold = 'DemiBold' },
+    family_name = 'JetBrainsMono Nerd Font Mono',
+    faces = { Half = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
     line_height = 1.0,
     size = {
       ['MA-605'] = 11,
       legolas = 14,
       default = 10
-    }
+    },
+    has_italic = true,
   },
   {
-    family_name = 'JetBrainsMono Nerd Font',
-    faces = { Thin = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
+    family_name = 'FiraCode Nerd Font',
+    faces = { Half = 'Light', Normal = 450, Bold = 'DemiBold' },
     line_height = 1.0,
     size = {
       ['MA-605'] = 11,
       legolas = 14,
       default = 10
-    }
-  }
+    },
+    has_italic = false,
+  },
 }
 
 local function get_font(font)
-  return wezterm.font(
-    font.family_name,
+  return wezterm.font_with_fallback({
     {
+      family = font.family_name,
       weight = font.faces.Normal,
-      italic = false,
-    }
-  )
+      style = font.has_italic and 'Italic' or 'Normal',
+    },
+    table.unpack(fallback_fonts),
+  })
+end
+
+local function make_font_with_fallback(family, weight, style)
+  return wezterm.font_with_fallback({
+    { family = family, weight = weight, style = style },
+    table.unpack(fallback_fonts),
+  })
 end
 
 local function get_font_rules(font)
   ---@type FontRules
   local font_rules = {
-    -- Match bold text and use a specific bold font
     {
       intensity = 'Half',
       italic = true,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Half,
-        style = 'Italic',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Half, 'Italic'),
     },
     {
       intensity = 'Half',
       italic = false,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Half,
-        style = 'Normal',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Half, 'Normal'),
     },
     {
       intensity = 'Normal',
       italic = true,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Normal,
-        style = 'Italic',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Normal, 'Italic'),
     },
     {
       intensity = 'Normal',
       italic = false,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Normal,
-        style = 'Normal',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Normal, 'Normal'),
     },
     {
       intensity = 'Bold',
       italic = true,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Bold,
-        style = 'Italic',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Bold, 'Italic'),
     },
     {
       intensity = 'Bold',
       italic = false,
-      font = wezterm.font({
-        family = font.family_name,
-        weight = font.faces.Bold,
-        style = 'Normal',
-      }),
+      font = make_font_with_fallback(font.family_name, font.faces.Bold, 'Normal'),
     },
   }
   return font_rules

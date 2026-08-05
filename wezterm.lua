@@ -7,6 +7,11 @@ local fonts = require('fonts')
 -- Import-Module -Name NerdFonts
 -- Install-NerdFont -Name 'FiraCode'
 -- Install-NerdFont -Name 'JetBrainsMono'
+-- Install-NerdFont -Name 'SymbolsNerdFontMono'
+-- winget install Microsoft.WindowsTerminal
+-- winget install Microsoft.NotoFonts
+-- winget install Microsoft.CambriaMath
+-- winget install GNU.SegoeUI
 
 local config = wezterm.config_builder()
 
@@ -19,6 +24,7 @@ config.use_fancy_tab_bar = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = false
 config.adjust_window_size_when_changing_font_size = false
+config.use_cap_height_to_scale_fallback_fonts = false
 config.max_fps = 120
 
 if wezterm.hostname() == 'MA-605' then
@@ -48,7 +54,6 @@ for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
   end
 end
 
-config.enable_scroll_bar = true
 config.scrollback_lines = 50000
 config.use_dead_keys = false
 config.disable_default_key_bindings = true
@@ -56,7 +61,7 @@ config.unicode_version = 14
 config.debug_key_events = false
 config.win32_system_backdrop = 'Tabbed'
 config.allow_win32_input_mode = false
-config.window_background_opacity = 0.8
+config.window_background_opacity = 1.0
 config.text_background_opacity = 1.0
 config.window_padding = {
   left = 0,
@@ -76,9 +81,8 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   }
   local pwsh_with_vs = {
     'pwsh.exe',
-    '-NoExit', '-Command',
-    -- '&{Import-Module "h:/Program Files/Microsoft Visual Studio/2022/Preview/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell c86811b0 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
-    '&{Import-Module "C:/Program Files/Microsoft Visual Studio/18/Insiders/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell f2e467b8 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+    '-NoExit', '-File',
+    'h:\\dev\\tools\\bin\\Init-VsDevShell.ps1'
   }
   config.default_cwd = 'h:/projects/'
   if wezterm.hostname() == 'MA-605' then
@@ -158,7 +162,7 @@ config.keys = {
     action = act.ActivateKeyTable({
       name = "resize_font",
       one_shot = false,
-      timemout_miliseconds = 1000,
+      timeout_milliseconds = 1000,
     }),
   },
   { key = 'b', mods = 'LEADER|CTRL', action = act.SendKey { key = 'b', mods = 'CTRL' }, },
