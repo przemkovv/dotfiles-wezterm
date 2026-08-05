@@ -24,17 +24,6 @@ local fallback_fonts = {
 
 M.fonts = {
   {
-    family_name = 'JetBrainsMono Nerd Font Mono',
-    faces = { Half = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
-    line_height = 1.0,
-    size = {
-      ['MA-605'] = 11,
-      legolas = 14,
-      default = 10
-    },
-    has_italic = true,
-  },
-  {
     family_name = 'FiraCode Nerd Font',
     faces = { Half = 'Light', Normal = 450, Bold = 'DemiBold' },
     line_height = 1.0,
@@ -44,6 +33,17 @@ M.fonts = {
       default = 10
     },
     has_italic = false,
+  },
+  {
+    family_name = 'JetBrainsMono Nerd Font Mono',
+    faces = { Half = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
+    line_height = 1.0,
+    size = {
+      ['MA-605'] = 11,
+      legolas = 14,
+      default = 10
+    },
+    has_italic = true,
   },
 }
 
