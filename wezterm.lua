@@ -54,6 +54,7 @@ for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
   end
 end
 
+config.enable_scroll_bar = true
 config.scrollback_lines = 50000
 config.use_dead_keys = false
 config.disable_default_key_bindings = true
@@ -81,15 +82,19 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   }
   local pwsh_with_vs = {
     'pwsh.exe',
-    '-NoExit', '-File',
+    '-NoExit',
+    '-File',
     'h:\\dev\\tools\\bin\\Init-VsDevShell.ps1'
   }
   config.default_cwd = 'h:/projects/'
   if wezterm.hostname() == 'MA-605' then
     pwsh_with_vs = {
       'pwsh.exe',
-      '-NoExit', '-Command',
-      '&{Import-Module "c:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 7cdab58d -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+      '-NoExit',
+      '-File', 'd:/dev/bin/Init-VsDevShell.ps1',
+      -- '-Command',
+      -- '&{Import-Module "c:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 7cdab58d -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
+      -- '&{Import-Module "C:/Program Files/Microsoft Visual Studio/18/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 8cb4656a -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}'
     }
     config.default_cwd = 'd:/projects/'
   end

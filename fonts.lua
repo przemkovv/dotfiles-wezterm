@@ -28,7 +28,7 @@ M.fonts = {
     faces = { Half = 'Light', Normal = 450, Bold = 'DemiBold' },
     line_height = 1.0,
     size = {
-      ['MA-605'] = 11,
+      ['MA-605'] = 10,
       legolas = 14,
       default = 10
     },
@@ -39,7 +39,7 @@ M.fonts = {
     faces = { Half = 'Light', Normal = 'Medium', Bold = 'ExtraBold' },
     line_height = 1.0,
     size = {
-      ['MA-605'] = 11,
+      ['MA-605'] = 10,
       legolas = 14,
       default = 10
     },
